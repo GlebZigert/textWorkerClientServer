@@ -70,17 +70,6 @@ void MainWindow::on_pushButton_clicked()
 void MainWindow::on_pushButton_2_clicked()
 {
 
-    QString fileName;
-
-
-   // fileName= QFileDialog::getOpenFileName(this, tr("Open Image"), "", "*txt");
-
-    fileName= QFileDialog::getOpenFileName(this, tr("Open Image"), "", "*txt");
-
-
-    qDebug()<<fileName;
-
-    QString res="";
 
 
     QFile file(fileName); // создаем объект класса QFile
@@ -96,5 +85,21 @@ void MainWindow::on_pushButton_2_clicked()
     data = file.readAll(); //считываем все данные с файла в объект data
 
     qDebug()<<"Data: "<<(QString)data;   socket->write("{\"type\":\"text\",\"text\":\""+data +"\"}");
+}
+
+
+void MainWindow::on_pushButton_3_clicked()
+{
+
+
+
+   // fileName= QFileDialog::getOpenFileName(this, tr("Open Image"), "", "*txt");
+
+    fileName= QFileDialog::getOpenFileName(this, tr("Open Image"), "", "*txt");
+
+
+    qDebug()<<fileName;
+
+
 }
 
