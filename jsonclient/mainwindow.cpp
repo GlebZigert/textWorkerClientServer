@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QHostAddress>
+#include <QFile>
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -67,8 +69,32 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    QString text="1 22 22 333 333 333 4444 4444 4444 4444 55555 55555 55555 55555 55555";
 
-    socket->write("{\"type\":\"text\",\"text\":\""+text.toUtf8() +"\"}");
+    QString fileName;
+
+
+   // fileName= QFileDialog::getOpenFileName(this, tr("Open Image"), "", "*txt");
+
+    fileName= QFileDialog::getOpenFileName(this, tr("Open Image"), "", "*txt");
+
+
+    qDebug()<<fileName;
+
+    QString res="";
+
+
+    QFile file(fileName); // создаем объект класса QFile
+
+    QByteArray data; // Создаем объект класса QByteArray, куда мы будем считывать данные
+
+    if (!file.open(QIODevice::ReadOnly)){ // Проверяем, возможно ли открыть наш файл для чтения
+        qDebug()<<"file not open";
+        // если это сделать невозможно, то завершаем функцию
+        return;
+    }
+
+    data = file.readAll(); //считываем все данные с файла в объект data
+
+    qDebug()<<"Data: "<<(QString)data;   socket->write("{\"type\":\"text\",\"text\":\""+data +"\"}");
 }
 
