@@ -1,6 +1,8 @@
 #include "myserver.h"
 #include <QDebug>
-
+#include <QJsonDocument>
+#include <QJsonParseError>
+#include <QJsonObject>
 
 myserver::myserver(QObject *parent)
 {
@@ -44,6 +46,24 @@ void myserver::sockReady()
         Data = socket->readAll();
 
          qDebug()<<(QString)Data;
+
+        QJsonDocument doc;
+        QJsonParseError docError;
+
+         doc=QJsonDocument::fromJson( Data,&docError);
+
+        if(docError.errorString().toInt()==QJsonParseError::NoError){
+
+            qDebug()<<"JSON success.";
+
+            if(doc.object().value("type").toString() == "text"){
+              qDebug()<<"Запрос на анализ текста:";
+              qDebug()<<doc.object().value("text").toString();
+            }
+
+        }else{
+           qDebug()<<"Ошибки с форматом передачи данных"<<docError.errorString();
+        }
     }
 }
 

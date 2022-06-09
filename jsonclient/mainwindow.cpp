@@ -67,6 +67,7 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    socket->write("Запрос на анализ текста");
+
+    socket->write("{\"type\":\"text\",\"text\":\"11 22 22 333 333 333 QWERTTY\"}");
 }
 
