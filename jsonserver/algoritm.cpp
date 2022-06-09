@@ -128,8 +128,34 @@ QString wordLength::work_with(QByteArray *data)
 
         qDebug()<<"len: "<<one<<"  count: "<<simbolCount.value(one);
 
-       res+="\""+(QString)one+"\""+":"+"\""+(QString)simbolCount.value(one)+"\"";
+       res += "{";
+
+       res += "\"";
+       res += "len";
+       res += "\"";
+
+       res += ":";
+
+       res += "\"";
+       res += QString::number(one);
+       res += "\"";
+
+       res += ",";
+
+       res += "\"";
+       res += "count";
+       res += "\"";
+
+       res += ":";
+
+       res += "\"";
+       res += QString::number(simbolCount.value(one));
+       res+=+ "\"";
+
+       res += "},";
     }
+
+    res.remove(res.count()-1,1);
 
     res+="]";
 
