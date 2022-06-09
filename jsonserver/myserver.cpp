@@ -72,6 +72,10 @@ void myserver::sockReady()
 
                   qDebug()<<"JSON success.";
 
+
+
+                  socket->write(result.toUtf8());
+
               }else{
 
                qDebug()<<"Ошибки с форматом передачи данных"<<docError.errorString();
