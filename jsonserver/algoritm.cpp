@@ -9,6 +9,11 @@ Algoritm::Algoritm(QObject *parent) : QObject(parent)
 
 }
 
+Algoritm::~Algoritm()
+{
+    qDebug()<<"Algoritm::~Algoritm()";
+}
+
 QString Algoritm::work_with(QByteArray *data)
 {
 

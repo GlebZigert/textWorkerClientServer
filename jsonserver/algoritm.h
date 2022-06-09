@@ -9,6 +9,7 @@ class Algoritm : public QObject
     Q_OBJECT
 public:
     explicit Algoritm(QObject *parent = nullptr);
+    ~Algoritm();
 
     virtual QString work_with(QByteArray *data);
 

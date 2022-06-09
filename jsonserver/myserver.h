@@ -17,7 +17,7 @@ public:
     QTcpSocket* socket;
     QByteArray Data;
 
-    AlgoritmController worker;
+ //   AlgoritmController worker;
 
 public slots:
     void startServer();

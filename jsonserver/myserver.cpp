@@ -62,8 +62,9 @@ void myserver::sockReady()
 
               QByteArray data = doc.object().value("text").toString().toUtf8();
 
-
-              QString result = worker.work(&data);
+             AlgoritmController *worker=new AlgoritmController();
+              QString result = worker->work(&data);
+              worker->deleteLater();
 
               qDebug()<<result;
 
