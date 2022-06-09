@@ -64,3 +64,9 @@ void MainWindow::on_pushButton_clicked()
     socket->connectToHost(QHostAddress("127.0.0.1"),5555);
 }
 
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    socket->write("Запрос на анализ текста");
+}
+

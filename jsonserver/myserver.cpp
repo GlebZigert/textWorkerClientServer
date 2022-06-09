@@ -32,11 +32,19 @@ void myserver::incomingConnection(qintptr socketDescriptor)
     qDebug()<<socketDescriptor<<" Client connected";
     socket->write("{\"type\":\"connect\",\"status\":\"yes\"}");
 
+
+
 }
 
 void myserver::sockReady()
 {
+    if(socket->waitForConnected(500)){
 
+        socket->waitForReadyRead(500);
+        Data = socket->readAll();
+
+         qDebug()<<(QString)Data;
+    }
 }
 
 void myserver::sockDisc()

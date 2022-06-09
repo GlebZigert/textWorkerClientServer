@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 
     socket.connectToHost(ipaddr,port);
 
-
+//Отправить запрос на анализ текста и текст
 
  //   socket.connectToHost("127.0.0.1",5555);
 
