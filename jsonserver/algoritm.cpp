@@ -68,10 +68,38 @@ QString wordLength::work_with(QByteArray *data)
     QStringList list;
     QString current="";
 
+
+    QString str = QString::fromUtf8(*data);
+
+     for(int i=0;i<str.length();i++){
+         qDebug()<<str[i];
+
+         bool word=false;
+
+         if((str[i]==" ")||(str[i]=='\xa')){
+
+         word=true;
+         //    qDebug()<<"новое слово:";
+         }else{
+             current+=str[i];
+
+         }
+         if(i==data->count()-1){
+             word=true;
+         }
+
+         if(word){
+             qDebug()<<current;
+             list.append(current);
+             current="";
+
+         }
+     }
+    /*
     for(int i=0;i<data->count();i++){
 
 
-     //   qDebug()<<i<<" "<<data->at(i)<<" "<<(int)(data->at(i))<<"\n";
+        qDebug()<<i<<" "<<data->at(i)<<" "<<(int)(data->at(i))<<"\n";
 
         bool word=false;
 
@@ -94,10 +122,8 @@ QString wordLength::work_with(QByteArray *data)
 
         }
 
-
-
-
     }
+    */
 
     QMap<int,int> simbolCount;
 
