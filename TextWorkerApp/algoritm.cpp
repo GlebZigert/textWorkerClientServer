@@ -29,10 +29,41 @@ simbolCount::simbolCount(QObject *parent)
 
 QString simbolCount::work_with(QByteArray *data)
 {
+ return "";
+
+   /*
+
+{"type":"simbolCount",
+"values":
+    [
+        {"1":"1"},
+       {"2":"2"}
+
+        ]
+}
+    */
+}
+
+wordLength::wordLength(QObject *parent)
+{
+
+}
+
+QString wordLength::work_with(QByteArray *data)
+{
+    QString res="";
+    res+="{";
     qDebug()<<" ";
-    qDebug()<<"simbolCount:";
+
+    res+="\"type\":\"Распределение слов по их длинам\",";
+
+    qDebug()<<"wordLength:";
+     res+="\"first\":\"Длина слова\",";
+      res+="\"second\":\"Количество слов\",";
     qDebug() <<"Data: "<< (QString)(*data);
    qDebug() <<"count: "<< data->count();
+
+
 
     QStringList list;
     QString current="";
@@ -74,20 +105,21 @@ QString simbolCount::work_with(QByteArray *data)
 
     }
 
+
+
+     res+="\"values\":[";
+
     foreach(auto one, simbolCount.keys()){
 
+
         qDebug()<<"len: "<<one<<"  count: "<<simbolCount.value(one);
+
+       res+="\""+(QString)one+"\""+":"+"\""+(QString)simbolCount.value(one)+"\"";
     }
 
-   return  "simbolCount";
-}
+    res+="]";
 
-wordLength::wordLength(QObject *parent)
-{
+    res+="}";
 
-}
-
-QString wordLength::work_with(QByteArray *data)
-{
-     return  "wordLength";
+   return  res;
 }

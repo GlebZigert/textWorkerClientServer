@@ -8,6 +8,11 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 
+#include <QJsonDocument>
+#include <QJsonParseError>
+#include <QJsonObject>
+
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -36,16 +41,21 @@ class mData{
 void MainWindow::on_pushButton_clicked()
 {
 
-    QString fileName = QFileDialog::getOpenFileName(this,
-        tr("Open Image"), "", "*txt");
+    QString fileName;
+
+
+   // fileName= QFileDialog::getOpenFileName(this, tr("Open Image"), "", "*txt");
+
+    fileName="/home/administrator/build-TextWorkerApp-Desktop-Debug/Новый файл.txt";
+
 
     qDebug()<<fileName;
 
     QString res="";
 
-    list.append(new Algoritm());
-    list.append(new simbolCount());
-    list.append(new wordLength());
+  //  list.append(new Algoritm());
+  //  list.append(new simbolCount());
+   list.append(new wordLength());
 
     QFile file(fileName); // создаем объект класса QFile
 
@@ -70,14 +80,28 @@ void MainWindow::on_pushButton_clicked()
         res+=algo->work_with(&data);
     }
 
-
-
+qDebug()<<" ";
+ qDebug()<<"Результат:";
 
     qDebug()<<res;
 
+    QJsonDocument doc;
+    QJsonParseError docError;
 
 
 
+    doc=QJsonDocument::fromJson( res.toUtf8(),&docError);
+
+    if(docError.errorString().toInt()==QJsonParseError::NoError){
+
+        qDebug()<<"JSON success.";
+
+
+
+    }else{
+
+     qDebug()<<"Ошибки с форматом передачи данных"<<docError.errorString();
+    }
 
  /*
     QString val;
