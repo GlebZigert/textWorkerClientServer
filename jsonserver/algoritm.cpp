@@ -77,7 +77,7 @@ QString wordLength::work_with(QByteArray *data)
     QString str = QString::fromUtf8(*data);
 
      for(int i=0;i<str.length();i++){
-         qDebug()<<str[i];
+         //qDebug()<<str[i];
 
          bool word=false;
 
