@@ -67,7 +67,8 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
+    QString text="1 22 22 333 333 333 4444 4444 4444 4444 55555 55555 55555 55555 55555";
 
-    socket->write("{\"type\":\"text\",\"text\":\"11 22 22 333 333 333 QWERTTY\"}");
+    socket->write("{\"type\":\"text\",\"text\":\""+text.toUtf8() +"\"}");
 }
 

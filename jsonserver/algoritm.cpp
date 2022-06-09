@@ -73,16 +73,30 @@ QString wordLength::work_with(QByteArray *data)
 
      //   qDebug()<<i<<" "<<data->at(i)<<" "<<(int)(data->at(i))<<"\n";
 
+        bool word=false;
+
         if(((int)(data->at(i))==32)||((int)(data->at(i))==10)){
 
-            qDebug()<<current;
-            list.append(current);
-            current="";
+        word=true;
         //    qDebug()<<"новое слово:";
         }else{
             current+=data->at(i);
 
         }
+        if(i==data->count()-1){
+            word=true;
+        }
+
+        if(word){
+            qDebug()<<current;
+            list.append(current);
+            current="";
+
+        }
+
+
+
+
     }
 
     QMap<int,int> simbolCount;
