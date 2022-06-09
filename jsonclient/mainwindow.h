@@ -28,5 +28,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QByteArray Data;
 };
 #endif // MAINWINDOW_H

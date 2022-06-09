@@ -22,7 +22,12 @@ MainWindow::~MainWindow()
 
 void MainWindow::sockReady()
 {
+    if(socket->waitForConnected(500)){
 
+        socket->waitForReadyRead(500);
+        Data = socket->readAll();
+        qDebug()<<(QString)Data;
+    }
 }
 
 void MainWindow::sockDisc()
