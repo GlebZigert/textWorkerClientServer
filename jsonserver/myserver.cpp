@@ -62,6 +62,7 @@ void myserver::sockReady()
 
               QByteArray data = doc.object().value("text").toString().toUtf8();
 
+
               QString result = worker.work(&data);
 
               qDebug()<<result;

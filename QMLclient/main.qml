@@ -50,7 +50,12 @@ FileDialog {
     }
     Component.onCompleted: visible = true
 }
+Column{
+    anchors.fill: parent
 Button{
+    id: btn
+    width: 50
+    height: 20
     onPressed: {
     console.log("беру путь к файлу и шлю запрос на сервер")
         fileDialog.open()
@@ -58,23 +63,57 @@ Button{
     }
 
 }
+Rectangle{
+   width: parent.width
+   height: parent.height-btn.height
+color:"lightblue"
+
 
 Column {
+anchors.fill: parent
     Repeater {
+anchors.fill: parent
         model: model
-        Rectangle{
-        width: 80
-        height: 20
-         border.width: 1
-        color: "lightgray"
-        Text { text: model.len+" "+model.count }
+
+            Row{
+            width: parent.width
+            Rectangle{
+                x:0
+            width: parent.width/2
+            height: 30
+             border.width: 1
+             border.color: "white"
+            color: "lightgray"
+            Text {
+                 x:parent.width/3
+                 y:parent.height/5
+
+
+                text: model.len }
+            }
+            Rectangle{
+                x: parent.width/2
+            width: parent.width/2
+            height: 30
+            border.width: 1
+            border.color: "white"
+            color: "orange"
+            Text {
+                x:parent.width/3
+                y:parent.height/5
+
+                text: model.count }
+
+            }
+
+
+         //
         }
-
-
-     //
     }
 }
+}
 
+}
 Component.onCompleted: {
     fileDialog.close();
 
