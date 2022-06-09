@@ -26,6 +26,28 @@ void MainWindow::sockReady()
 
         socket->waitForReadyRead(500);
         Data = socket->readAll();
+
+        doc=QJsonDocument::fromJson(Data,&docError);
+
+        if(docError.errorString().toInt()==QJsonParseError::NoError){
+
+
+            qDebug()<<doc.object().value("type").toString();
+            qDebug()<<doc.object().value("status").toString();
+
+            if((doc.object().value("type").toString() == "connect")&&
+               (doc.object().value("status").toString() == "yes")){
+
+                QMessageBox::information(this,"Информация","Соединение установлено");
+
+            }else{
+                QMessageBox::information(this,"Информация","Соединение не установлено");
+            }
+
+        }else{
+            QMessageBox::information(this,"Информация","Ошибки с форматом передачи данных"+docError.errorString());
+        }
+
         qDebug()<<(QString)Data;
     }
 }

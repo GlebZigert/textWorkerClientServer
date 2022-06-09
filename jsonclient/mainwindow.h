@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <QTcpSocket>
 #include <QMessageBox>
+#include <QJsonDocument>
+#include <QJsonParseError>
+#include <QJsonObject>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -29,5 +32,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QByteArray Data;
+
+   QJsonDocument doc;
+   QJsonParseError docError;
 };
 #endif // MAINWINDOW_H

@@ -30,7 +30,7 @@ void myserver::incomingConnection(qintptr socketDescriptor)
     connect(socket,SIGNAL(disconnected()),this,SLOT(sockDisc()));
 
     qDebug()<<socketDescriptor<<" Client connected";
-    socket->write("You are connect");
+    socket->write("{\"type\":\"connect\",\"status\":\"yes\"}");
 
 }
 
