@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    algo = new Algoritm();
+
 
 }
 
@@ -53,9 +53,6 @@ void MainWindow::on_pushButton_clicked()
 
     QString res="";
 
-  //  list.append(new Algoritm());
-  //  list.append(new simbolCount());
-   list.append(new wordLength());
 
     QFile file(fileName); // создаем объект класса QFile
 
@@ -73,12 +70,9 @@ void MainWindow::on_pushButton_clicked()
 
     file.close();
 
+    res=worker.work(&data);
 
 
-    foreach(auto algo, list){
-
-        res+=algo->work_with(&data);
-    }
 
 qDebug()<<" ";
  qDebug()<<"Результат:";

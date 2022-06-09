@@ -10,11 +10,13 @@ CONFIG += c++11
 
 SOURCES += \
     algoritm.cpp \
+    algoritmcontroller.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     algoritm.h \
+    algoritmcontroller.h \
     mainwindow.h
 
 FORMS += \

@@ -2,8 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "algoritm.h"
-#include <QList>
+#include "algoritmcontroller.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -18,9 +18,8 @@ public:
     ~MainWindow();
 
 private:
-    Algoritm *algo;
 
-    QList<Algoritm*> list;
+    AlgoritmController worker;
 
 private slots:
     void on_pushButton_clicked();
