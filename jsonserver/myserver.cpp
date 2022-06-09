@@ -59,6 +59,28 @@ void myserver::sockReady()
             if(doc.object().value("type").toString() == "text"){
               qDebug()<<"Запрос на анализ текста:";
               qDebug()<<doc.object().value("text").toString();
+
+              QByteArray data = doc.object().value("text").toString().toUtf8();
+
+              QString result = worker.work(&data);
+
+              qDebug()<<result;
+
+              doc=QJsonDocument::fromJson( result.toUtf8(),&docError);
+
+              if(docError.errorString().toInt()==QJsonParseError::NoError){
+
+                  qDebug()<<"JSON success.";
+
+              }else{
+
+               qDebug()<<"Ошибки с форматом передачи данных"<<docError.errorString();
+              }
+
+
+
+
+
             }
 
         }else{

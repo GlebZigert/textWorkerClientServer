@@ -5,6 +5,8 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 
+#include <algoritmcontroller.h>
+
 class myserver : public QTcpServer
 {
     Q_OBJECT
@@ -14,6 +16,8 @@ public:
 
     QTcpSocket* socket;
     QByteArray Data;
+
+    AlgoritmController worker;
 
 public slots:
     void startServer();
