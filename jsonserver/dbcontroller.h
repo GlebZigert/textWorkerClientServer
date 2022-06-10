@@ -9,6 +9,26 @@
 #include <QDir>
 #include <QSqlQuery>
 
+class db_entity : public QObject
+{
+    Q_OBJECT
+
+
+
+
+public:
+
+    explicit db_entity(QObject *parent = nullptr);
+    db_entity(const db_entity & parent);
+    ~db_entity();
+
+ QString dt;
+ QString ipaddr;
+ uint count;
+
+};
+
+
 class dbController : public QObject
 {
     Q_OBJECT
@@ -22,7 +42,7 @@ public:
 
 
 
-    QString read();
+    QList<db_entity> read();
 
     bool update();
 

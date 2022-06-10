@@ -78,11 +78,14 @@ qDebug()<<"sqlinsert: "<<sqlinsert;
             return false;
         }
 
-return true;
+        return true;
 }
 
-QString dbController::read()
+
+
+QList<db_entity> dbController::read()
 {
+    QList<db_entity> list;
     qDebug()<<"dbController::read()";
     QSqlQuery query;
     QString sqlSelect = "SELECT * FROM mydb";
@@ -90,7 +93,7 @@ QString dbController::read()
 
     if(query.lastError().isValid()){
         qDebug()<<"SELECT "<<query.lastError().text();
-        return "";
+        return list;
     }
 
     QString res;
@@ -108,6 +111,12 @@ QString dbController::read()
       res+="{\"ipaddr\":\""+ipaddr+"\"},";
       res+="{\"count\":\""+QString::number(count)+"\"},";
 
+      db_entity entity;
+      entity.dt=dt;
+      entity.ipaddr=ipaddr;
+      entity.count=count;
+      list.append(entity);
+
     }
     res.remove(res.count()-1,1);
     res+="]}";
@@ -122,7 +131,7 @@ QString dbController::read()
       qDebug()<<"Ошибки с форматом передачи данных"<<docError.errorString();
      }
 
-    return res;
+    return list;
 }
 
 bool dbController::update()
@@ -178,4 +187,21 @@ bool dbController::drop_db()
          return false;
      }
      return true;
+}
+
+db_entity::db_entity(QObject *parent)
+{
+
+}
+
+db_entity::db_entity(const db_entity &parent)
+{
+   dt=parent.dt;
+   ipaddr=parent.ipaddr;
+   count=parent.count;
+}
+
+db_entity::~db_entity()
+{
+
 }

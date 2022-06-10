@@ -14,6 +14,11 @@ myserver::~myserver()
 
 }
 
+QString myserver::convertListdbEntityToJson(QList<db_entity>)
+{
+
+}
+
 void myserver::startServer()
 {
     if(this->listen(QHostAddress::Any,5555)){
@@ -68,7 +73,7 @@ void myserver::sockReady()
 
               m_db.insert("\""+QDateTime::currentDateTime().toString()+"\"","\""+socket->peerAddress().toString()+"\"",data.count());
 
-              qDebug()<<m_db.read();
+
 
               qDebug()<<result;
 
@@ -84,7 +89,15 @@ void myserver::sockReady()
              if(doc.object().value("type").toString() == "connect"){
                   socket->write("{\"type\":\"connect\",\"status\":\"yes\"}");
              }
+             if(doc.object().value("type").toString() == "request_db"){
 
+                 QList<db_entity> list=m_db.read();
+
+                 QString res=convertListdbEntityToJson(list);
+
+                  socket->write(res.toUtf8());
+
+             }
 
         }else{
            qDebug()<<"Ошибки с форматом передачи данных"<<docError.errorString();
