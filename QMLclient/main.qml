@@ -74,6 +74,9 @@ FileDialog {
 }
 
 
+Rectangle{
+anchors.fill: parent
+color:"lightblue"
 Column{
 
     anchors.fill: parent
@@ -95,12 +98,20 @@ Button{
 
     }
 }
+Rectangle{
+    width: parent.width-btn.width
+    height: parent.height
+    color:"white"
     Text {
-        id :filePath;
+        id :filePath
+     anchors.fill: parent
+
+
 
 
         text: "" }
 
+    }
     }
 
 
@@ -179,23 +190,23 @@ color:"lightblue"
 Rectangle{
     id: ip_input
    anchors.centerIn: parent
-width: 300
-height: 75
+width: 150
+height: 50
 color:white
 
 Column{
-
+    anchors.fill: parent
 Text{
     id: iptxt
-    width:300
+    width:parent.width
     height:20
     text:"Введите адрес сервера"
 
 
 }
 TextField {
-    width: 300
-    height: 55
+    width: parent.width
+    height: 30
             id: textFieldip
             validator: RegExpValidator {
                 regExp:  /^((?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.){0,3}(?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])$/
@@ -211,7 +222,7 @@ TextField {
 }
 }
 
-
+}
 
 
 Component.onCompleted: {
