@@ -68,24 +68,15 @@ void myserver::sockReady()
 
               m_db.insert("\""+QDateTime::currentDateTime().toString()+"\"","\""+socket->peerAddress().toString()+"\"",data.count());
 
-              m_db.read();
+              qDebug()<<m_db.read();
 
               qDebug()<<result;
 
               doc=QJsonDocument::fromJson( result.toUtf8(),&docError);
-
-
-
-              if(docError.errorString().toInt()==QJsonParseError::NoError){
-
+             if(docError.errorString().toInt()==QJsonParseError::NoError){
                   qDebug()<<"JSON success.";
-
-
-
                   socket->write(result.toUtf8());
-
               }else{
-
                qDebug()<<"Ошибки с форматом передачи данных"<<docError.errorString();
               }
 

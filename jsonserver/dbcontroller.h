@@ -22,7 +22,7 @@ public:
 
 
 
-    bool read();
+    QString read();
 
     bool update();
 

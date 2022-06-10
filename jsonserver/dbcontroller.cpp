@@ -1,6 +1,10 @@
 #include "dbcontroller.h"
 #include <QDebug>
 
+#include <QJsonDocument>
+#include <QJsonParseError>
+#include <QJsonObject>
+
 dbController::dbController(QObject *parent) : QObject(parent)
 {
 
@@ -41,7 +45,7 @@ bool dbController::create_db()
         return  false;
     }
 
-    drop_db();
+    //drop_db();
     //create  a table
     QString tblFileCreate = "CREATE TABLE IF NOT EXISTS mydb("
                             "id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -77,7 +81,7 @@ qDebug()<<"sqlinsert: "<<sqlinsert;
 return true;
 }
 
-bool dbController::read()
+QString dbController::read()
 {
     qDebug()<<"dbController::read()";
     QSqlQuery query;
@@ -86,9 +90,12 @@ bool dbController::read()
 
     if(query.lastError().isValid()){
         qDebug()<<"SELECT "<<query.lastError().text();
-        return false;
+        return "";
     }
 
+    QString res;
+    res+="{";
+    res+="\"type\":\"db\",\"data\":[";
     while(query.next()){
         uint    id        =query.value("id").toUInt();
         QString dt        =query.value("dt").toString();
@@ -97,9 +104,25 @@ bool dbController::read()
 
       qDebug()<<id<<" "<<dt<<" "<<ipaddr<<" "<< count;
 
-    }
+      res+="{\"dt\":\""+dt+"\"},";
+      res+="{\"ipaddr\":\""+ipaddr+"\"},";
+      res+="{\"count\":\""+QString::number(count)+"\"},";
 
-    return true;
+    }
+    res.remove(res.count()-1,1);
+    res+="]}";
+
+    qDebug()<<"res";
+    QJsonParseError docError;
+    QJsonDocument doc=QJsonDocument::fromJson( res.toUtf8(),&docError);
+    if(docError.errorString().toInt()==QJsonParseError::NoError){
+         qDebug()<<"JSON success.";
+
+     }else{
+      qDebug()<<"Ошибки с форматом передачи данных"<<docError.errorString();
+     }
+
+    return res;
 }
 
 bool dbController::update()
