@@ -6,6 +6,7 @@
 #include <QTcpSocket>
 
 #include <algoritmcontroller.h>
+#include <dbcontroller.h>
 
 class myserver : public QTcpServer
 {
@@ -16,6 +17,8 @@ public:
 
     QTcpSocket* socket;
     QByteArray Data;
+
+    dbController m_db;
 
  //   AlgoritmController worker;
 

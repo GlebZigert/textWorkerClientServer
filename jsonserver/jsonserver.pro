@@ -1,5 +1,5 @@
 QT -= gui
-QT += network
+QT += network sql
 
 CONFIG += c++11 console
 CONFIG -= app_bundle
@@ -11,6 +11,7 @@ CONFIG -= app_bundle
 SOURCES += \
         algoritm.cpp \
         algoritmcontroller.cpp \
+        dbcontroller.cpp \
         main.cpp \
         myserver.cpp
 
@@ -22,4 +23,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     algoritm.h \
     algoritmcontroller.h \
+    dbcontroller.h \
     myserver.h
