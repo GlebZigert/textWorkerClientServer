@@ -20,8 +20,28 @@ onDataChanged: {
     supreme.update()
 }
 
+onConnectionChanged: {
+
+    console.log("onConnectionChanged: "+backend.connection)
+
+    if(backend.connection){
+        ip_input.visible=false
+        textFieldip.enabled=false
+
+        head.visible=true
+        btn.enabled=true
+
+
+
+    }
+}
+
 
 }
+
+
+
+
 
 ListModel{
 id: model
@@ -33,6 +53,7 @@ FileDialog {
       nameFilters: [ "Text files (*.txt)" ]
     title: "Please choose a file"
     folder: shortcuts.home
+    visible: false
     onAccepted: {
         const fileName = fileDialog.fileUrl;
 
@@ -49,9 +70,8 @@ FileDialog {
         console.log("Canceled")
 
     }
-    Component.onCompleted: visible = true
+    //Component.onCompleted: visible = true
 }
-
 
 
 Column{
@@ -62,11 +82,13 @@ Column{
         id: head
     width: parent.width
      height: 20
+     visible: false
 Button{
     id: btn
     width: 50
     height: parent.height
     text: "Файл"
+    enabled: false
     onPressed: {
     console.log("беру путь к файлу и шлю запрос на сервер")
         fileDialog.open()
@@ -154,11 +176,48 @@ color:"lightblue"
 
 
 
+Rectangle{
+    id: ip_input
+   anchors.centerIn: parent
+width: 300
+height: 75
+color:white
+
+Column{
+
+Text{
+    id: iptxt
+    width:300
+    height:20
+    text:"Введите адрес сервера"
+
+
+}
+TextField {
+    width: 300
+    height: 55
+            id: textFieldip
+            validator: RegExpValidator {
+                regExp:  /^((?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.){0,3}(?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])$/
+            }
+            inputMethodHints: Qt.ImhFormattedNumbersOnly
+
+            onEditingFinished: {
+            console.log("Ввел айпи адрес")
+                backend.start(textFieldip.text)
+
+            }
+        }
+}
+}
 
 
 
 
 Component.onCompleted: {
+
+  //  backend.start("")
+
     fileDialog.close();
 
 

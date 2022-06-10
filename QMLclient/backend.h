@@ -14,12 +14,15 @@ class Backend : public QQuickItem
     Q_OBJECT
 
      Q_PROPERTY(QString data READ data NOTIFY dataIsCnanged)
+     Q_PROPERTY(bool connection READ connection NOTIFY connectionIsCnanged)
 public:
     Backend();
 
      Q_INVOKABLE void request(QString fileName);
+     Q_INVOKABLE void start(QString fileName);
 
     QString data() const;
+    bool connection(){return m_connection;};
 
 public slots:
     void sockReady();
@@ -31,6 +34,7 @@ private:
 
     QString     m_data;
 
+    bool     m_connection;
 
      QTcpSocket* socket;
 
@@ -38,8 +42,8 @@ private:
      QJsonParseError docError;
 
 signals:
-     void dataIsCnanged(QString m_data);
-
+     void dataIsCnanged(QString );
+     void connectionIsCnanged();
 };
 
 #endif // BACKEND_H

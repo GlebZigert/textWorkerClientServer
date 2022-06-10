@@ -12,13 +12,19 @@ Backend::Backend()
       connect(socket,SIGNAL(readyRead()),this,SLOT(sockReady()));
       connect(socket,SIGNAL(disconnected()),this,SLOT(sockDisc()));
 
-       socket->connectToHost(QHostAddress("127.0.0.1"),5555);
-
 
 }
 
 void Backend::request(QString fileName)
 {
+qDebug()<<"socket state: "<<socket->state();
+
+if (socket->state() !=  QTcpSocket::ConnectedState){
+
+    qDebug()<<"socket is not connected";
+return ;
+}
+
     qDebug()<<"Backend::request "<<fileName;
 
     QFile file(fileName); // создаем объект класса QFile
@@ -33,9 +39,39 @@ void Backend::request(QString fileName)
 
     data = file.readAll(); //считываем все данные с файла в объект data
 
-    qDebug()<<"Data: "<<(QString)data;   socket->write("{\"type\":\"text\",\"text\":\""+data +"\"}");
+    qDebug()<<"Data: "<<(QString)data;
+    socket->write("{\"type\":\"text\",\"text\":\""+data +"\"}");
 
 }
+
+void Backend::start(QString ip)
+{
+
+qDebug()<<"connect to "<<ip;
+
+QHostAddress myIP;
+   if(myIP.setAddress( ip))
+   {
+  qDebug()<<"Valid IP Address";
+   }
+   else
+   {
+   qDebug()<<"Invalid IP address";
+   return;
+   }
+
+
+     socket->connectToHost(QHostAddress("127.0.0.1"),5555);
+
+     if(socket->waitForConnected(5)){
+
+         qDebug()<<"Connected to "<<ip;
+         socket->write("{\"type\":\"connect\"}");
+     }
+
+}
+
+
 
 QString Backend::data() const
 {
@@ -48,6 +84,9 @@ void Backend::sockReady()
 
         socket->waitForReadyRead(5);
         Data = socket->readAll();
+
+         qDebug()<<(QString)Data;
+
 
         doc=QJsonDocument::fromJson(Data,&docError);
 
@@ -62,22 +101,39 @@ void Backend::sockReady()
 
                qDebug()<<"Информация: Соединение установлено";
 
-            }else{
-                qDebug()<<"Информация: Соединение не установлено";
+
+               m_connection=true;
+               emit connectionIsCnanged();
+
+
             }
+
+            if((doc.object().value("type").toString() == "result")){
+
+
+                     qDebug()<<(QString)Data;
+
+                     m_data=(QString)Data;
+
+                     qDebug()<<"m_data: "<<m_data;
+
+                     emit dataIsCnanged(m_data);
+
+
 
         }else{
             qDebug()<<"Информация: Ошибки с форматом передачи данных"<<docError.errorString();
         }
 
-        qDebug()<<(QString)Data;
+       // qDebug()<<(QString)Data;
 
-        m_data=(QString)Data;
+      //  m_data=(QString)Data;
 
-        qDebug()<<"m_data: "<<m_data;
+      //  qDebug()<<"m_data: "<<m_data;
 
-        emit dataIsCnanged(m_data);
+      //  emit dataIsCnanged(m_data);
     }
+}
 }
 
 void Backend::sockDisc()

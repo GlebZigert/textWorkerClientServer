@@ -83,11 +83,11 @@ void myserver::sockReady()
                qDebug()<<"Ошибки с форматом передачи данных"<<docError.errorString();
               }
 
-
-
-
-
             }
+             if(doc.object().value("type").toString() == "connect"){
+                  socket->write("{\"type\":\"connect\",\"status\":\"yes\"}");
+             }
+
 
         }else{
            qDebug()<<"Ошибки с форматом передачи данных"<<docError.errorString();

@@ -22,6 +22,7 @@ QString AlgoritmController::work(QByteArray *data)
 {
     QString res;
      res+="{";
+      res+="\"type\":\"result\",";
       res+="\"res\":[";
     foreach(auto algo, list){
 
