@@ -193,7 +193,7 @@ QString wordLength::work_with(QByteArray *data)
    qDebug() <<"count: "<< data->count();
 
 
-    QStringList list;
+
     QString current="";
 
 
@@ -205,30 +205,12 @@ QString wordLength::work_with(QByteArray *data)
     return res;
     }
 
-     for(int i=0;i<str.length();i++){
-         //qDebug()<<str[i];
+    QString name("United1St!ates");
+    QStringList list =str.split(QRegExp("[\\W]"), QString::SkipEmptyParts);
 
-         bool word=false;
-
-         if((str[i]==" ")||(str[i]=='\xa')){
-
-         word=true;
-         //    qDebug()<<"новое слово:";
-         }else{
-             current+=str[i];
-
-         }
-         if(i==data->count()-1){
-             word=true;
-         }
-
-         if(word){
-             qDebug()<<current;
-             list.append(current);
-             current="";
-
-         }
-     }
+    foreach(auto one,list){
+        qDebug()<<one;
+    }
     /*
     for(int i=0;i<data->count();i++){
 
