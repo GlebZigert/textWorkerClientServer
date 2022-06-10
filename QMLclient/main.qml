@@ -39,6 +39,7 @@ FileDialog {
         //rm file://
         const flNm=fileName.toString().replace("file://","")
         console.log("You chose: " + flNm)
+        filePath.text=flNm;
         backend.request(flNm)
 
 
@@ -50,70 +51,113 @@ FileDialog {
     }
     Component.onCompleted: visible = true
 }
+
+
+
 Column{
+
     anchors.fill: parent
+
+    Row{
+        id: head
+    width: parent.width
+     height: 20
 Button{
     id: btn
     width: 50
-    height: 20
+    height: parent.height
+    text: "Файл"
     onPressed: {
     console.log("беру путь к файлу и шлю запрос на сервер")
         fileDialog.open()
 
     }
-
 }
+    Text {
+        id :filePath;
+
+
+        text: "" }
+
+    }
+
+
+
+
+
+
 Rectangle{
    width: parent.width
-   height: parent.height-btn.height
+   height: parent.height-head.height
 color:"lightblue"
 
 
-Column {
-anchors.fill: parent
-    Repeater {
-anchors.fill: parent
-        model: model
-
-            Row{
-            width: parent.width
-            Rectangle{
-                x:0
-            width: parent.width/2
-            height: 30
-             border.width: 1
-             border.color: "white"
-            color: "lightgray"
-            Text {
-                 x:parent.width/3
-                 y:parent.height/5
 
 
-                text: model.len }
+    ScrollView {
+        width: parent.width
+        height : parent.height
+        contentWidth: column.width    // The important part
+        contentHeight: column.height  // Same
+        clip : true
+    Column {
+    anchors.fill: parent
+
+        Repeater {
+    anchors.fill: parent
+            model: model
+
+                Row{
+                width: parent.width
+                Rectangle{
+                    x:0
+                width: parent.width/2
+                height: 30
+                 border.width: 1
+                 border.color: "white"
+                color: "lightgray"
+                Text {
+                     x:5
+                     y:parent.height/5
+
+
+                    text: model.len }
+                }
+                Rectangle{
+                    x: parent.width/2
+                width: parent.width/2
+                height: 30
+                border.width: 1
+                border.color: "white"
+                color: "lightblue"
+                Text {
+                    x:5
+                    y:parent.height/5
+
+                    text: model.count }
+
+                }
+
+
+             //
             }
-            Rectangle{
-                x: parent.width/2
-            width: parent.width/2
-            height: 30
-            border.width: 1
-            border.color: "white"
-            color: "orange"
-            Text {
-                x:parent.width/3
-                y:parent.height/5
-
-                text: model.count }
-
-            }
-
-
-         //
         }
     }
+    }
+
+
+
+
+
 }
 }
 
-}
+
+
+
+
+
+
 Component.onCompleted: {
     fileDialog.close();
 
@@ -122,27 +166,44 @@ Component.onCompleted: {
 }
 
 function update(){
+
+     model.clear()
     console.log(backend.data)
   //  console.log(backend.data.values.count)
     var job= JSON.parse(backend.data);
 
-    console.log(job.type)
-    console.log(job.first)
-    console.log(job.second)
-    console.log(Object.keys(job.values).length)
 
-    for(var i=0;i<Object.keys(job.values).length;i++){
-    console.log(job.values[i].len+" "+job.values[i].count)
+     console.log("res.length: "+Object.keys(job.res).length)
+
+
+    for(var i=0;i<Object.keys(job.res).length;i++){
+
+
+        console.log("type  : "+job.res[i].type)
+        console.log("first : "+job.res[i].first)
+        console.log("second: "+job.res[i].second)
+
+         model.append({len:job.res[i].first, count:job.res[i].second });
+
+ console.log("res.value["+i+"]length: "+Object.keys(job.res[i].values).length)
+
+        for(var j=0;j<Object.keys(job.res[i].values).length;j++){
+
+
+
+        console.log(job.res[i].values[j].len+" "+job.res[i].values[j].count)
+
+         model.append({len:job.res[i].values[j].len, count:job.res[i].values[j].count })
+        }
+
     }
+
 
 //  var str =  '{"a":"A whatever, run","b":"B fore something happens"}'
 
  //   console.log(str)
 //var JsonObject= JSON.parse(str);
 
-model.clear()
-    for(var i=0;i<Object.keys(job.values).length;i++)
-  model.append({len:job.values[i].len, count:job.values[i].count });
 
 }
 

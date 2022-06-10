@@ -34,19 +34,143 @@ simbolCount::simbolCount(QObject *parent)
 
 QString simbolCount::work_with(QByteArray *data)
 {
- return "";
+    QString res="";
 
-   /*
+    qDebug()<<" ";
 
-{"type":"simbolCount",
-"values":
-    [
-        {"1":"1"},
-       {"2":"2"}
+    res+="\"type\":\"Распределение символов\",";
 
-        ]
-}
-    */
+    qDebug()<<"wordLength:";
+     res+="\"first\":\"Символ\",";
+      res+="\"second\":\"Количество повторений\",";
+    qDebug() <<"Data: "<< (QString)(*data);
+   qDebug() <<"count: "<< data->count();
+
+
+
+    QMap<QString, int> map;
+    QString current="";
+
+
+    QString str = QString::fromUtf8(*data);
+
+    if(str.count()==0){
+    res+="\"values\":[]";
+    return res;
+    }
+
+
+     for(int i=0;i<str.length();i++){
+         //qDebug()<<str[i];
+
+
+
+
+         if((QString)str[i]=="\n")
+             continue;
+
+         if(!map.contains((QString)str[i])){
+             map.insert((QString)str[i],1);
+
+         }else{
+
+             int val = map.value((QString)str[i])+1;
+             map.remove((QString)str[i]);
+             map.insert((QString)str[i],val);
+
+
+         }
+
+     }
+
+    res+="\"values\":[";
+
+
+    foreach(auto one, map.keys()){
+        res += "{";
+
+        res += "\"";
+        res += "len";
+        res += "\"";
+
+        res += ":";
+
+        res += "\"";
+        res += one;
+        res += "\"";
+
+        res += ",";
+
+        res += "\"";
+        res += "count";
+        res += "\"";
+
+        res += ":";
+
+        res += "\"";
+        res += QString::number(map.value(one));
+        res+=+ "\"";
+
+        res += "},";
+
+        qDebug()<<one<<" "<<map.value(one);
+    }
+
+
+    res.remove(res.count()-1,1);
+
+    res+="]";
+
+
+
+
+
+    return res;
+
+
+/*
+     res+="\"values\":[";
+
+    foreach(auto one, simbolCount.keys()){
+
+
+        qDebug()<<"len: "<<one<<"  count: "<<simbolCount.value(one);
+
+       res += "{";
+
+       res += "\"";
+       res += "len";
+       res += "\"";
+
+       res += ":";
+
+       res += "\"";
+       res += QString::number(one);
+       res += "\"";
+
+       res += ",";
+
+       res += "\"";
+       res += "count";
+       res += "\"";
+
+       res += ":";
+
+       res += "\"";
+       res += QString::number(simbolCount.value(one));
+       res+=+ "\"";
+
+       res += "},";
+    }
+
+    res.remove(res.count()-1,1);
+
+    res+="]";
+
+    res+="}";
+
+   return  res;
+   */
 }
 
 wordLength::wordLength(QObject *parent)
@@ -57,7 +181,7 @@ wordLength::wordLength(QObject *parent)
 QString wordLength::work_with(QByteArray *data)
 {
     QString res="";
-    res+="{";
+
     qDebug()<<" ";
 
     res+="\"type\":\"Распределение слов по их длинам\",";
@@ -69,12 +193,17 @@ QString wordLength::work_with(QByteArray *data)
    qDebug() <<"count: "<< data->count();
 
 
-
     QStringList list;
     QString current="";
 
 
     QString str = QString::fromUtf8(*data);
+
+
+    if(str.count()==0){
+    res+="\"values\":[]";
+    return res;
+    }
 
      for(int i=0;i<str.length();i++){
          //qDebug()<<str[i];
@@ -190,7 +319,7 @@ QString wordLength::work_with(QByteArray *data)
 
     res+="]";
 
-    res+="}";
+
 
    return  res;
 }

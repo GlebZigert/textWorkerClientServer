@@ -40,9 +40,9 @@ void myserver::incomingConnection(qintptr socketDescriptor)
 
 void myserver::sockReady()
 {
-    if(socket->waitForConnected(500)){
+    if(socket->waitForConnected(5)){
 
-        socket->waitForReadyRead(500);
+        socket->waitForReadyRead(5);
         Data = socket->readAll();
 
          qDebug()<<(QString)Data;

@@ -44,9 +44,9 @@ QString Backend::data() const
 
 void Backend::sockReady()
 {
-    if(socket->waitForConnected(500)){
+    if(socket->waitForConnected(5)){
 
-        socket->waitForReadyRead(500);
+        socket->waitForReadyRead(5);
         Data = socket->readAll();
 
         doc=QJsonDocument::fromJson(Data,&docError);
