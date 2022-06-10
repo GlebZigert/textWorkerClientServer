@@ -61,7 +61,7 @@ QHostAddress myIP;
    }
 
 
-     socket->connectToHost(QHostAddress("127.0.0.1"),5555);
+     socket->connectToHost(myIP,5555);
 
      if(socket->waitForConnected(5)){
 

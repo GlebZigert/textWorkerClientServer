@@ -3,6 +3,7 @@
 
 dbController::dbController(QObject *parent) : QObject(parent)
 {
+
 create_db();
 }
 
@@ -40,13 +41,13 @@ bool dbController::create_db()
         return  false;
     }
 
+    drop_db();
     //create  a table
-    QString tblFileCreate = "CREATE TABLE IF NOT EXISTS files("
+    QString tblFileCreate = "CREATE TABLE IF NOT EXISTS mydb("
                             "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                            "filePath STRING,"
-                            "fileSize BIGINT,"
-                            "fileMTime BIGINT,"
-                            "fileLastCheck BIGINT"
+                            "dt STRING,"
+                            "ipaddr STRING,"
+                            "count BIGINT"
                             ")";
 
     QSqlQuery query;
@@ -59,28 +60,28 @@ bool dbController::create_db()
     return true;
 }
 
-bool dbController::insert()
+bool dbController::insert(QString dt, QString ipaddr, uint count)
 {
+    qDebug()<<"dbController::insert(QString dt, QString ipaddr, uint count)";
     QSqlQuery query;
-    const int INSERT_COUNT = 10;
 
-    for(int i=0;i<INSERT_COUNT;i++){
-        QString sqlinsert = "INSERT INTO files(filePath,fileSize,fileMtime,fileLastCheck)"+
-         QString("VALUES('file%1',%1,%1,%1)").arg(i);
-
+        QString sqlinsert = "INSERT INTO mydb(dt,ipaddr,count)"+
+         QString("VALUES(%1,%2,%3)").arg(dt).arg(ipaddr).arg(count);
+qDebug()<<"sqlinsert: "<<sqlinsert;
         query.exec(sqlinsert);
         if(query.lastError().isValid()){
             qDebug()<<"INSERT "<<query.lastError().text();
             return false;
         }
-    }
-    return true;
+
+return true;
 }
 
 bool dbController::read()
 {
+    qDebug()<<"dbController::read()";
     QSqlQuery query;
-    QString sqlSelect = "SELECT * FROM files";
+    QString sqlSelect = "SELECT * FROM mydb";
     query.exec(sqlSelect);
 
     if(query.lastError().isValid()){
@@ -89,12 +90,12 @@ bool dbController::read()
     }
 
     while(query.next()){
-        uint    id              =query.value("id").toUInt();
-        QString filePath        =query.value("filePath").toString();
-        uint    fileSize        =query.value("fileSize").toUInt();
-        uint    fileMTime       =query.value("fileMTime").toUInt();
-        uint    fileLastCheck   =query.value("fileLastCheck").toUInt();
-      qDebug()<<id<<" "<<filePath<<" "<<fileSize<<" "<< fileMTime<<" "<<fileLastCheck;
+        uint    id        =query.value("id").toUInt();
+        QString dt        =query.value("dt").toString();
+        QString ipaddr    =query.value("ipaddr").toString();
+        uint    count     =query.value("count").toUInt();
+
+      qDebug()<<id<<" "<<dt<<" "<<ipaddr<<" "<< count;
 
     }
 
@@ -104,7 +105,7 @@ bool dbController::read()
 bool dbController::update()
 {
     QSqlQuery query;
-    QString sqlUpdate = "UPDATE files SET filePath='TESTME' WHERE id=1";
+    QString sqlUpdate = "UPDATE mydb SET filePath='TESTME' WHERE id=1";
     query.exec(sqlUpdate);
 
     if(query.lastError().isValid()){
@@ -114,7 +115,7 @@ bool dbController::update()
 
     //check the update
 
-    QString sqlSelect = "SELECT * FROM files WHERE id=1";
+    QString sqlSelect = "SELECT * FROM mydb WHERE id=1";
     query.exec(sqlSelect);
 
     if(query.lastError().isValid()){
@@ -147,7 +148,7 @@ bool dbController::update()
 bool dbController::drop_db()
 {
      QSqlQuery query;
-     query.exec("DROP TABLE files");
+     query.exec("DROP TABLE mydb");
 
      if(query.lastError().isValid()){
          qDebug()<<"DROP TABLE "<<query.lastError().text();

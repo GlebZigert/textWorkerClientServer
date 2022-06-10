@@ -18,7 +18,9 @@ public:
 
     bool create_db();
 
-    bool insert();
+    bool insert(QString dt, QString ipaddr, uint count);
+
+
 
     bool read();
 

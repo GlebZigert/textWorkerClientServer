@@ -66,9 +66,15 @@ void myserver::sockReady()
               QString result = worker->work(&data);
               worker->deleteLater();
 
+              m_db.insert("\""+QDateTime::currentDateTime().toString()+"\"","\""+socket->peerAddress().toString()+"\"",data.count());
+
+              m_db.read();
+
               qDebug()<<result;
 
               doc=QJsonDocument::fromJson( result.toUtf8(),&docError);
+
+
 
               if(docError.errorString().toInt()==QJsonParseError::NoError){
 
