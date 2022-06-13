@@ -1,6 +1,7 @@
 #include "algoritm.h"
 #include <QFile>
 #include <QString>
+#include <QDebug>
 
 
 

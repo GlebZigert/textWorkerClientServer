@@ -19,6 +19,7 @@ public:
     Backend();
 
      Q_INVOKABLE void request(QString fileName);
+     Q_INVOKABLE void request_db();
      Q_INVOKABLE void start(QString fileName);
 
     QString data() const;

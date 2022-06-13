@@ -3,6 +3,8 @@
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QJsonObject>
+#include <QDateTime>
+#include <QJsonArray>
 
 myserver::myserver(QObject *parent)
 {
@@ -14,9 +16,44 @@ myserver::~myserver()
 
 }
 
-QString myserver::convertListdbEntityToJson(QList<db_entity>)
+QJsonArray myserver::convertListdbEntityToJson(QList<db_entity> list)
 {
+    QJsonObject obj;
+    QJsonArray ar;
 
+    foreach (auto one, list) {
+        QJsonObject m_obj;
+        m_obj.insert("dt",one.dt);
+        m_obj.insert("ipaddr",one.ipaddr);
+        m_obj.insert("count",QString::number(one.count));
+
+        ar.append(m_obj);
+
+    }
+
+   // obj.insert("data",ar);
+/*
+ QJsonObject m1;
+ m1.insert("one", QJsonValue::fromVariant(1));
+  m1.insert("second", QJsonValue::fromVariant(2));
+
+  QJsonObject m2;
+  m2.insert("one", QJsonValue::fromVariant(3));
+   m2.insert("second", QJsonValue::fromVariant(5));
+
+    ar.append(m1);
+      ar.append(m2);
+
+    obj.insert("FirstName", QJsonValue::fromVariant("John"));
+    obj.insert("LastName", QJsonValue::fromVariant("Doe"));
+    obj.insert("Age", QJsonValue::fromVariant(43));
+    obj.insert("Array", ar);
+
+    qDebug()<<"obj: "<<obj;
+
+*/
+
+return ar;
 }
 
 void myserver::startServer()
@@ -60,6 +97,7 @@ void myserver::sockReady()
         if(docError.errorString().toInt()==QJsonParseError::NoError){
 
             qDebug()<<"JSON success.";
+            qDebug()<<doc.object();
 
             if(doc.object().value("type").toString() == "text"){
               qDebug()<<"Запрос на анализ текста:";
@@ -91,11 +129,26 @@ void myserver::sockReady()
              }
              if(doc.object().value("type").toString() == "request_db"){
 
+                 qDebug()<<"request_db";
+
                  QList<db_entity> list=m_db.read();
 
-                 QString res=convertListdbEntityToJson(list);
+                 QJsonArray res=convertListdbEntityToJson(list);
 
-                  socket->write(res.toUtf8());
+                 QJsonObject jobj;
+
+
+                 jobj.insert("data",res);
+
+                jobj.insert("type","db");
+
+                 QJsonDocument doc(jobj);
+
+
+                 qDebug()<<"doc: "<<doc;
+                 QByteArray jByte(doc.toJson(QJsonDocument::Compact));
+                 socket->write(jByte);
+
 
              }
 

@@ -30,17 +30,30 @@ onConnectionChanged: {
 
         head.visible=true
         btn.enabled=true
+        db_btn.enabled=true
+        dataview.visible=true
 
 
 
+    }else{
+        ip_input.visible=true
+        textFieldip.enabled=true
+
+        head.visible=false
+        btn.enabled=false
+        db_btn.enabled=false
+        dataview.visible=false
     }
-}
-
 
 }
 
 
+}
 
+
+ListModel{
+id: db_model
+}
 
 
 ListModel{
@@ -86,9 +99,23 @@ Column{
     width: parent.width
      height: 20
      visible: false
+
+     Button{
+         id: db_btn
+         width: 100
+         height: parent.height
+         text: "ДБ"
+         enabled: false
+         onPressed: {
+         console.log("шлю запрос БД")
+             backend.request_db()
+
+
+         }
+     }
 Button{
     id: btn
-    width: 50
+    width: 100
     height: parent.height
     text: "Файл"
     enabled: false
@@ -99,7 +126,7 @@ Button{
     }
 }
 Rectangle{
-    width: parent.width-btn.width
+    width: parent.width-btn.width-db_btn.width
     height: parent.height
     color:"white"
     Text {
@@ -115,11 +142,81 @@ Rectangle{
     }
 
 
+    Rectangle{
+       id: db_dataview
+       width: parent.width
+       height: parent.height-head.height
+    color:"lightblue"
+    visible: false
+
+    ScrollView {
+        width: parent.width
+        height : parent.height
+        contentWidth: column.width    // The important part
+        contentHeight: column.height  // Same
+        clip : true
+    Column {
+    anchors.fill: parent
+
+        Repeater {
+    anchors.fill: parent
+            model: db_model
+
+                Row{
+                width: parent.width
+                Rectangle{
+                    x:0
+                width: parent.width/3
+                height: 30
+                 border.width: 1
+                 border.color: "white"
+                color: "lightgray"
+                Text {
+                     x:5
+                     y:parent.height/5
 
 
+                    text: model.dt }
+                }
+                Rectangle{
+                    x: parent.width/3
+                width: parent.width/3
+                height: 30
+                border.width: 1
+                border.color: "white"
+                color: "lightblue"
+                Text {
+                    x:5
+                    y:parent.height/5
+
+                    text: model.ipaddr }
+
+                }
+                Rectangle{
+                    x: 2*parent.width/3
+                width: parent.width/3
+                height: 30
+                border.width: 1
+                border.color: "white"
+                color: "lightblue"
+                Text {
+                    x:5
+                    y:parent.height/5
+
+                    text: model.count }
+
+                }
+
+             //
+            }
+        }
+    }
+    }
+}
 
 
 Rectangle{
+   id: dataview
    width: parent.width
    height: parent.height-head.height
 color:"lightblue"
@@ -190,7 +287,7 @@ color:"lightblue"
 Rectangle{
     id: ip_input
    anchors.centerIn: parent
-width: 150
+width: 200
 height: 50
 color:white
 
@@ -211,6 +308,7 @@ TextField {
             validator: RegExpValidator {
                 regExp:  /^((?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.){0,3}(?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])$/
             }
+            text: "127.0.0.1"
             inputMethodHints: Qt.ImhFormattedNumbersOnly
 
             onEditingFinished: {
@@ -237,42 +335,60 @@ Component.onCompleted: {
 
 function update(){
 
-     model.clear()
+
     console.log(backend.data)
   //  console.log(backend.data.values.count)
     var job= JSON.parse(backend.data);
 
 
-     console.log("res.length: "+Object.keys(job.res).length)
+    console.log("job.type: ",job.type)
 
+
+
+if(job.type=="result"){
+
+    db_dataview.visible=false
+    dataview.visible=true
+
+       model.clear()
+
+    console.log("res.length: "+Object.keys(job.res).length)
 
     for(var i=0;i<Object.keys(job.res).length;i++){
-
 
         console.log("type  : "+job.res[i].type)
         console.log("first : "+job.res[i].first)
         console.log("second: "+job.res[i].second)
 
-         model.append({len:job.res[i].first, count:job.res[i].second });
+        model.append({len:job.res[i].first, count:job.res[i].second });
 
- console.log("res.value["+i+"]length: "+Object.keys(job.res[i].values).length)
+        console.log("res.value["+i+"]length: "+Object.keys(job.res[i].values).length)
 
         for(var j=0;j<Object.keys(job.res[i].values).length;j++){
 
+            console.log(job.res[i].values[j].len+" "+job.res[i].values[j].count)
 
+            model.append({len:job.res[i].values[j].len, count:job.res[i].values[j].count })
+        }
+    }
+}
 
-        console.log(job.res[i].values[j].len+" "+job.res[i].values[j].count)
+if(job.type=="db"){
 
-         model.append({len:job.res[i].values[j].len, count:job.res[i].values[j].count })
+    db_dataview.visible=true
+    dataview.visible=false
+
+    db_model.clear()
+
+     console.log("data length: "+Object.keys(job.data).length)
+        for(var j=0;j<Object.keys(job.data).length;j++){
+
+            console.log(job.data[j].dt+" "+job.data.ipaddr+" "+job.data.count)
+
+            db_model.append({dt:job.data[j].dt, ipaddr:job.data[j].ipaddr,count:job.data[j].count })
         }
 
-    }
-
-
-//  var str =  '{"a":"A whatever, run","b":"B fore something happens"}'
-
- //   console.log(str)
-//var JsonObject= JSON.parse(str);
+}
 
 
 }

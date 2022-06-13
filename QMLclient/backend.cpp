@@ -44,6 +44,19 @@ return ;
 
 }
 
+void Backend::request_db()
+{
+    if (socket->state() !=  QTcpSocket::ConnectedState){
+
+        qDebug()<<"socket is not connected";
+    return ;
+    }
+
+          socket->write("{\"type\":\"request_db\"}");
+
+
+}
+
 void Backend::start(QString ip)
 {
 
@@ -121,10 +134,21 @@ void Backend::sockReady()
 
 
 
-        }else{
-            qDebug()<<"Информация: Ошибки с форматом передачи данных"<<docError.errorString();
         }
+            if((doc.object().value("type").toString() == "db")){
 
+
+                     qDebug()<<(QString)Data;
+
+                     m_data=(QString)Data;
+
+                     qDebug()<<"m_data: "<<m_data;
+
+                     emit dataIsCnanged(m_data);
+
+
+
+        }
        // qDebug()<<(QString)Data;
 
       //  m_data=(QString)Data;
@@ -132,11 +156,16 @@ void Backend::sockReady()
       //  qDebug()<<"m_data: "<<m_data;
 
       //  emit dataIsCnanged(m_data);
-    }
+    }else{
+            qDebug()<<"Информация: Ошибки с форматом передачи данных"<<docError.errorString();
+        }
+
 }
 }
 
 void Backend::sockDisc()
 {
-
+qDebug()<<"дисконнект";
+m_connection=false;
+emit connectionIsCnanged();
 }

@@ -20,7 +20,7 @@ public:
 
     dbController m_db;
 
-    QString convertListdbEntityToJson(QList<db_entity>);
+    QJsonArray convertListdbEntityToJson(QList<db_entity>);
 
  //   AlgoritmController worker;
 

@@ -1,4 +1,5 @@
 #include "algoritmcontroller.h"
+#include <QDebug>
 
 AlgoritmController::AlgoritmController(QObject *parent) : QObject(parent)
 {
