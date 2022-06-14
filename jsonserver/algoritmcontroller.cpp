@@ -19,17 +19,30 @@ AlgoritmController::~AlgoritmController()
   }
 }
 
-QString AlgoritmController::work(QByteArray *data)
+QJsonObject AlgoritmController::work(QByteArray *data)
 {
+
+    QJsonObject obj;
+    QJsonArray ar;
+
+    obj.insert("type","result");
+
     QString res;
      res+="{";
       res+="\"type\":\"result\",";
       res+="\"res\":[";
+
+
     foreach(auto algo, list){
 
+        QJsonObject m_obj;
+        m_obj.insert("type",algo->getType());
+          m_obj.insert("values",algo->work_with(data));
 
+
+            ar.append(m_obj);
        res+="{";
-        res+=algo->work_with(data);
+      //  res+=algo->work_with(data);
 
          res += "},";
     }
@@ -37,5 +50,7 @@ QString AlgoritmController::work(QByteArray *data)
       res+="]";
        res+="}";
 
-    return res;
+       obj.insert("res",ar);
+
+    return obj;
 }

@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QString>
 class Algoritm : public QObject
 {
@@ -11,7 +12,8 @@ public:
     explicit Algoritm(QObject *parent = nullptr);
     ~Algoritm();
 
-    virtual QString work_with(QByteArray *data);
+    virtual QJsonArray work_with(QByteArray *data);
+    virtual QString getType(){return "type of algoritm";};
 
 signals:
 
@@ -23,8 +25,9 @@ class simbolCount : public Algoritm
 public:
     explicit simbolCount(QObject *parent = nullptr);
 
-    virtual QString work_with(QByteArray *data);
+    virtual QJsonArray work_with(QByteArray *data);
 
+     virtual QString getType(){return "Распределение символов";};
 signals:
 
 };
@@ -35,8 +38,8 @@ class wordLength : public Algoritm
 public:
     explicit wordLength(QObject *parent = nullptr);
 
-    virtual QString work_with(QByteArray *data);
-
+    virtual QJsonArray work_with(QByteArray *data);
+     virtual QString getType(){return "Распределение слов по их длинам";};
 
 signals:
 

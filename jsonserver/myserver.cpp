@@ -106,22 +106,17 @@ void myserver::sockReady()
               QByteArray data = doc.object().value("text").toString().toUtf8();
 
              AlgoritmController *worker=new AlgoritmController();
-              QString result = worker->work(&data);
+              QJsonObject result = worker->work(&data);
               worker->deleteLater();
-
-              m_db.insert("\""+QDateTime::currentDateTime().toString()+"\"","\""+socket->peerAddress().toString()+"\"",data.count());
-
+              QJsonDocument doc(result);
 
 
-              qDebug()<<result;
+              qDebug()<<"doc: "<<doc;
+              QByteArray jByte(doc.toJson(QJsonDocument::Compact));
+              socket->write(jByte);
 
-              doc=QJsonDocument::fromJson( result.toUtf8(),&docError);
-             if(docError.errorString().toInt()==QJsonParseError::NoError){
-                  qDebug()<<"JSON success.";
-                  socket->write(result.toUtf8());
-              }else{
-               qDebug()<<"Ошибки с форматом передачи данных"<<docError.errorString();
-              }
+
+
 
             }
              if(doc.object().value("type").toString() == "connect"){

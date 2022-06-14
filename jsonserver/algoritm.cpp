@@ -15,15 +15,15 @@ Algoritm::~Algoritm()
     qDebug()<<"Algoritm::~Algoritm()";
 }
 
-QString Algoritm::work_with(QByteArray *data)
+QJsonArray Algoritm::work_with(QByteArray *data)
 {
 
-
+    QJsonArray ar={};
         qDebug() <<"Data: "<< (QString)(*data); // Выводим данные в консоль, предварительно создав строку из полученных данных
 
 
 
-    return "1";
+    return ar;
 }
 
 
@@ -33,9 +33,11 @@ simbolCount::simbolCount(QObject *parent)
 
 }
 
-QString simbolCount::work_with(QByteArray *data)
+QJsonArray simbolCount::work_with(QByteArray *data)
 {
     QString res="";
+
+    QJsonArray ar{};
 
     qDebug()<<" ";
 
@@ -57,7 +59,7 @@ QString simbolCount::work_with(QByteArray *data)
 
     if(str.count()==0){
     res+="\"values\":[]";
-    return res;
+    return ar;
     }
 
 
@@ -86,6 +88,12 @@ QString simbolCount::work_with(QByteArray *data)
 
     res+="\"values\":[";
 
+    QJsonObject obj;
+
+    QJsonObject m_obj;
+    m_obj.insert("len","символ");
+    m_obj.insert("count","Количество повторений");
+    ar.append(m_obj);
 
     foreach(auto one, map.keys()){
         res += "{";
@@ -103,7 +111,7 @@ QString simbolCount::work_with(QByteArray *data)
         res += ",";
 
         res += "\"";
-        res += "count";
+        res += "";
         res += "\"";
 
         res += ":";
@@ -113,6 +121,15 @@ QString simbolCount::work_with(QByteArray *data)
         res+=+ "\"";
 
         res += "},";
+
+        QJsonObject m_obj;
+        m_obj.insert("len",one);
+
+        m_obj.insert("count",QString::number(map.value(one)));
+
+        ar.append(m_obj);
+
+
 
         qDebug()<<one<<" "<<map.value(one);
     }
@@ -126,7 +143,7 @@ QString simbolCount::work_with(QByteArray *data)
 
 
 
-    return res;
+    return ar;
 
 
 /*
@@ -179,8 +196,10 @@ wordLength::wordLength(QObject *parent)
 
 }
 
-QString wordLength::work_with(QByteArray *data)
+QJsonArray wordLength::work_with(QByteArray *data)
 {
+
+    QJsonArray ar={};
     QString res="";
 
     qDebug()<<" ";
@@ -203,7 +222,7 @@ QString wordLength::work_with(QByteArray *data)
 
     if(str.count()==0){
     res+="\"values\":[]";
-    return res;
+    return ar;
     }
 
     QString name("United1St!ates");
@@ -266,6 +285,10 @@ QString wordLength::work_with(QByteArray *data)
 
      res+="\"values\":[";
 
+     QJsonObject m_obj;
+     m_obj.insert("len","Длина слова");
+     m_obj.insert("count","Количество слов");
+     ar.append(m_obj);
     foreach(auto one, simbolCount.keys()){
 
 
@@ -296,6 +319,13 @@ QString wordLength::work_with(QByteArray *data)
        res+=+ "\"";
 
        res += "},";
+
+       QJsonObject m_obj;
+       m_obj.insert("len",QString::number(one));
+
+       m_obj.insert("count",QString::number(simbolCount.value(one)));
+
+       ar.append(m_obj);
     }
 
     res.remove(res.count()-1,1);
@@ -304,5 +334,5 @@ QString wordLength::work_with(QByteArray *data)
 
 
 
-   return  res;
+   return  ar;
 }

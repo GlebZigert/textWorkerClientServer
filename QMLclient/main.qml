@@ -356,11 +356,11 @@ if(job.type=="result"){
 
     for(var i=0;i<Object.keys(job.res).length;i++){
 
-        console.log("type  : "+job.res[i].type)
-        console.log("first : "+job.res[i].first)
-        console.log("second: "+job.res[i].second)
+    //    console.log("type  : "+job.res[i].type)
+   //     console.log("first : "+job.res[i].first)
+    //    console.log("second: "+job.res[i].second)
 
-        model.append({len:job.res[i].first, count:job.res[i].second });
+    //    model.append({len:job.res[i].first, count:job.res[i].second });
 
         console.log("res.value["+i+"]length: "+Object.keys(job.res[i].values).length)
 

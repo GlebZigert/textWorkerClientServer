@@ -4,6 +4,7 @@
 #include <QObject>
 #include "algoritm.h"
 #include <QList>
+#include <QJsonObject>
 
 class AlgoritmController : public QObject
 {
@@ -12,7 +13,7 @@ public:
     explicit AlgoritmController(QObject *parent = nullptr);
     ~AlgoritmController();
 
-    QString work(QByteArray *data);
+    QJsonObject work(QByteArray *data);
 
 private:
     Algoritm *algo;
