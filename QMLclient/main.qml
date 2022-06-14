@@ -106,7 +106,7 @@ Column{
          id: db_btn
          width: 100
          height: parent.height
-         text: "ДБ"
+         text: "База"
          enabled: false
          onPressed: {
          console.log("шлю запрос БД")
@@ -299,12 +299,15 @@ Text{
     id: iptxt
     width:parent.width
     height:20
-    text:"Введите адрес сервера"
+    text:"Введите адрес сервера "
 
 
 }
+Row{
+    width:parent.width
+    height:30
 TextField {
-    width: parent.width
+    width: parent.width-50
     height: 30
             id: textFieldip
             validator: RegExpValidator {
@@ -319,6 +322,20 @@ TextField {
 
             }
         }
+
+Button{
+    width:50
+    height:30
+    text:"ОК"
+    onClicked:  {
+    console.log("Ввел айпи адрес")
+        backend.start(textFieldip.text)
+
+    }
+}
+
+}
+
 }
 }
 
