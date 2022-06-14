@@ -108,6 +108,10 @@ void myserver::sockReady()
              AlgoritmController *worker=new AlgoritmController();
               QJsonObject result = worker->work(&data);
               worker->deleteLater();
+
+              m_db.insert("\""+QDateTime::currentDateTime().toString()+"\"","\""+socket->peerAddress().toString()+"\"",data.count());
+
+
               QJsonDocument doc(result);
 
 
