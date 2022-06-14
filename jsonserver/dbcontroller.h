@@ -40,8 +40,6 @@ public:
 
     bool insert(QString dt, QString ipaddr, uint count);
 
-
-
     QList<db_entity> read();
 
     bool update();

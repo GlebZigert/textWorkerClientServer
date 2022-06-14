@@ -25,9 +25,9 @@ class simbolCount : public Algoritm
 public:
     explicit simbolCount(QObject *parent = nullptr);
 
-    virtual QJsonArray work_with(QByteArray *data);
+     QJsonArray work_with(QByteArray *data);
+     QString getType(){return "Распределение символов";};
 
-     virtual QString getType(){return "Распределение символов";};
 signals:
 
 };
@@ -38,10 +38,9 @@ class wordLength : public Algoritm
 public:
     explicit wordLength(QObject *parent = nullptr);
 
-    virtual QJsonArray work_with(QByteArray *data);
-     virtual QString getType(){return "Распределение слов по их длинам";};
+     QJsonArray work_with(QByteArray *data);
+     QString getType(){return "Распределение слов по их длинам";};
 
-signals:
 
 };
 

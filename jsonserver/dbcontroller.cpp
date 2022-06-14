@@ -18,17 +18,20 @@ dbController::~dbController()
 
 bool dbController::create_db()
 {
-     db = QSqlDatabase::addDatabase("QSQLITE");
+    db = QSqlDatabase::addDatabase("QSQLITE");
+
     if(db.lastError().isValid()){
         qDebug()<<" addDataBase "<<db.lastError().text();
         return false;
     }
+
     //Getting system applicaton data folder
     QString appDataLocation = QStandardPaths::writableLocation(QStandardPaths::ApplicationsLocation);
     qDebug()<<"appDataLocation: "<<appDataLocation;
 
     //Create the application data folder if not exists
     QDir dir(appDataLocation);
+
     if(!dir.exists()){
         dir.mkdir(appDataLocation);
         qDebug()<<"mkdir "<<appDataLocation;
@@ -41,12 +44,12 @@ bool dbController::create_db()
     db.setDatabaseName(dbPath);
 
     if(!db.open()){
-         qDebug()<<" Unable to open db "<<db.lastError().text()<<" "<<dbPath;
+        qDebug()<<" Unable to open db "<<db.lastError().text()<<" "<<dbPath;
         return  false;
     }
 
-    //drop_db();
-    //create  a table
+        //drop_db();
+        //create  a table
     QString tblFileCreate = "CREATE TABLE IF NOT EXISTS mydb("
                             "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                             "dt STRING,"
@@ -59,8 +62,9 @@ bool dbController::create_db()
 
     if(query.lastError().isValid()){
         qDebug()<<" CREATE TABLE "<<db.lastError().text();
-       return  false;
+        return  false;
     }
+
     return true;
 }
 
@@ -69,16 +73,17 @@ bool dbController::insert(QString dt, QString ipaddr, uint count)
     qDebug()<<"dbController::insert(QString dt, QString ipaddr, uint count)";
     QSqlQuery query;
 
-        QString sqlinsert = "INSERT INTO mydb(dt,ipaddr,count)"+
-         QString("VALUES(%1,%2,%3)").arg(dt).arg(ipaddr).arg(count);
-qDebug()<<"sqlinsert: "<<sqlinsert;
-        query.exec(sqlinsert);
-        if(query.lastError().isValid()){
-            qDebug()<<"INSERT "<<query.lastError().text();
-            return false;
-        }
+    QString sqlinsert = "INSERT INTO mydb(dt,ipaddr,count)"+
+    QString("VALUES(%1,%2,%3)").arg(dt).arg(ipaddr).arg(count);
+    qDebug()<<"sqlinsert: "<<sqlinsert;
+    query.exec(sqlinsert);
 
-        return true;
+    if(query.lastError().isValid()){
+        qDebug()<<"INSERT "<<query.lastError().text();
+        return false;
+    }
+
+    return true;
 }
 
 
@@ -96,20 +101,16 @@ QList<db_entity> dbController::read()
         return list;
     }
 
-    QString res;
-    res+="{";
-    res+="\"type\":\"db\",\"data\":[";
+
     while(query.next()){
         uint    id        =query.value("id").toUInt();
         QString dt        =query.value("dt").toString();
         QString ipaddr    =query.value("ipaddr").toString();
         uint    count     =query.value("count").toUInt();
 
-      qDebug()<<id<<" "<<dt<<" "<<ipaddr<<" "<< count;
+qDebug()<<id<<" "<<dt<<" "<<ipaddr<<" "<< count;
 
-      res+="{\"dt\":\""+dt+"\"},";
-      res+="{\"ipaddr\":\""+ipaddr+"\"},";
-      res+="{\"count\":\""+QString::number(count)+"\"},";
+
 
       db_entity entity;
       entity.dt=dt;
@@ -118,20 +119,10 @@ QList<db_entity> dbController::read()
       list.append(entity);
 
     }
-    res.remove(res.count()-1,1);
-    res+="]}";
-
-    qDebug()<<"res";
-    QJsonParseError docError;
-    QJsonDocument doc=QJsonDocument::fromJson( res.toUtf8(),&docError);
-    if(docError.errorString().toInt()==QJsonParseError::NoError){
-         qDebug()<<"JSON success.";
-
-     }else{
-      qDebug()<<"Ошибки с форматом передачи данных"<<docError.errorString();
-     }
 
     return list;
+
+
 }
 
 bool dbController::update()
@@ -196,9 +187,9 @@ db_entity::db_entity(QObject *parent)
 
 db_entity::db_entity(const db_entity &parent)
 {
-   dt=parent.dt;
-   ipaddr=parent.ipaddr;
-   count=parent.count;
+    dt=parent.dt;
+    ipaddr=parent.ipaddr;
+    count=parent.count;
 }
 
 db_entity::~db_entity()
