@@ -49,12 +49,12 @@ void myserver::sockReady()
         socket->waitForReadyRead(5);
         Data = socket->readAll();
 
-         qDebug()<<(QString)Data;
+        qDebug()<<(QString)Data;
 
         QJsonDocument doc;
         QJsonParseError docError;
 
-         doc=QJsonDocument::fromJson( Data,&docError);
+        doc=QJsonDocument::fromJson( Data,&docError);
 
         if(docError.errorString().toInt()==QJsonParseError::NoError){
 
@@ -62,65 +62,54 @@ void myserver::sockReady()
             qDebug()<<doc.object();
 
             if(doc.object().value("type").toString() == "text"){
-              qDebug()<<"Запрос на анализ текста:";
-              qDebug()<<doc.object().value("text").toString();
+                qDebug()<<"Запрос на анализ текста:";
+                qDebug()<<doc.object().value("text").toString();
 
-              QByteArray data = doc.object().value("text").toString().toUtf8();
+                QByteArray data = doc.object().value("text").toString().toUtf8();
 
-             AlgoritmController *worker=new AlgoritmController();
-              QJsonObject result;
+                AlgoritmController *worker=new AlgoritmController();
+                QJsonObject result;
 
-               worker->work(&data,&result);
+                worker->work(&data,&result);
 
+                worker->deleteLater();
 
-              worker->deleteLater();
+                m_db.insert("\""+QDateTime::currentDateTime().toString()+"\"","\""+socket->peerAddress().toString()+"\"",data.count());
 
+                QJsonDocument doc(result);
 
-
-              m_db.insert("\""+QDateTime::currentDateTime().toString()+"\"","\""+socket->peerAddress().toString()+"\"",data.count());
-
-
-              QJsonDocument doc(result);
-
-
-              qDebug()<<"doc: "<<doc;
-              QByteArray jByte(doc.toJson(QJsonDocument::Compact));
-              socket->write(jByte);
-
-
-
+                qDebug()<<"doc: "<<doc;
+                QByteArray jByte(doc.toJson(QJsonDocument::Compact));
+                socket->write(jByte);
 
             }
-             if(doc.object().value("type").toString() == "connect"){
-                  socket->write("{\"type\":\"connect\",\"status\":\"yes\"}");
-             }
-             if(doc.object().value("type").toString() == "request_db"){
 
-                 qDebug()<<"request_db";
+            if(doc.object().value("type").toString() == "connect"){
+                socket->write("{\"type\":\"connect\",\"status\":\"yes\"}");
+            }
 
-                 QJsonArray res=m_db.read();
+            if(doc.object().value("type").toString() == "request_db"){
 
+                qDebug()<<"request_db";
 
+                QJsonArray res=m_db.read();
 
-                 QJsonObject jobj;
+                QJsonObject jobj;
 
-
-                 jobj.insert("data",res);
+                jobj.insert("data",res);
 
                 jobj.insert("type","db");
 
-                 QJsonDocument doc(jobj);
+                QJsonDocument doc(jobj);
 
+                qDebug()<<"doc: "<<doc;
+                QByteArray jByte(doc.toJson(QJsonDocument::Compact));
+                socket->write(jByte);
 
-                 qDebug()<<"doc: "<<doc;
-                 QByteArray jByte(doc.toJson(QJsonDocument::Compact));
-                 socket->write(jByte);
-
-
-             }
+            }
 
         }else{
-           qDebug()<<"Ошибки с форматом передачи данных"<<docError.errorString();
+        qDebug()<<"Ошибки с форматом передачи данных"<<docError.errorString();
         }
     }
 }
