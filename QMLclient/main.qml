@@ -367,11 +367,12 @@ function update(){
 if(job.type=="result"){
 
     db_dataview.visible=false
-    dataview.visible=true
+    dataview.visible=false
 
        model.clear()
 
     console.log("res.length: "+Object.keys(job.res).length)
+
 
     for(var i=0;i<Object.keys(job.res).length;i++){
 
@@ -383,6 +384,7 @@ if(job.type=="result"){
 
         console.log("res.value["+i+"]length: "+Object.keys(job.res[i].values).length)
 
+
         for(var j=0;j<Object.keys(job.res[i].values).length;j++){
 
             console.log(job.res[i].values[j].len+" "+job.res[i].values[j].count)
@@ -390,6 +392,14 @@ if(job.type=="result"){
             model.append({len:job.res[i].values[j].len, count:job.res[i].values[j].count })
         }
     }
+
+    console.log("model.length: ",model.count)
+    if(model.count==0){
+    model.append({len:"-", count:"-"})
+    }else{
+    dataview.visible=true
+    }
+
 }
 
 if(job.type=="db"){
@@ -400,6 +410,8 @@ if(job.type=="db"){
     db_model.clear()
 
      console.log("data length: "+Object.keys(job.data).length)
+
+          if(Object.keys(job.data).length>0)
         for(var j=0;j<Object.keys(job.data).length;j++){
 
             console.log(job.data[j].dt+" "+job.data.ipaddr+" "+job.data.count)
