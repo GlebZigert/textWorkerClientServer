@@ -64,9 +64,10 @@ id: model
 FileDialog {
     id: fileDialog
     selectMultiple: false
+
       nameFilters: [ "Text files (*.txt)" ]
     title: "Please choose a file"
-    folder: shortcuts.home
+    folder: shortcuts.current
     visible: false
     onAccepted: {
         const fileName = fileDialog.fileUrl;
