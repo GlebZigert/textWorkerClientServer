@@ -106,8 +106,14 @@ void myserver::sockReady()
               QByteArray data = doc.object().value("text").toString().toUtf8();
 
              AlgoritmController *worker=new AlgoritmController();
-              QJsonObject result = worker->work(&data);
+              QJsonObject result;
+
+               worker->work(&data,&result);
+
+
               worker->deleteLater();
+
+
 
               m_db.insert("\""+QDateTime::currentDateTime().toString()+"\"","\""+socket->peerAddress().toString()+"\"",data.count());
 

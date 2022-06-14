@@ -14,7 +14,7 @@ public:
     ~AlgoritmController();
 
     QJsonObject work(QByteArray *data);
-
+    bool work(QByteArray *data, QJsonObject *json);
 private:
     Algoritm *algo;
 
