@@ -192,6 +192,14 @@ db_entity::db_entity(const db_entity &parent)
     count=parent.count;
 }
 
+void db_entity::operator =(const db_entity &entity)
+{
+    this->dt=entity.dt;
+    this->ipaddr=entity.ipaddr;
+    this->count=entity.count;
+
+}
+
 db_entity::~db_entity()
 {
 

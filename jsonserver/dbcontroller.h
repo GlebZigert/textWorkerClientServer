@@ -20,6 +20,7 @@ public:
 
     explicit db_entity(QObject *parent = nullptr);
     db_entity(const db_entity & parent);
+    void operator =(const db_entity& other);
     ~db_entity();
 
  QString dt;
