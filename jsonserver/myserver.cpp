@@ -16,45 +16,7 @@ myserver::~myserver()
 
 }
 
-QJsonArray myserver::convertListdbEntityToJson(QList<db_entity> list)
-{
-    QJsonObject obj;
-    QJsonArray ar;
 
-    foreach (auto one, list) {
-        QJsonObject m_obj;
-        m_obj.insert("dt",one.dt);
-        m_obj.insert("ipaddr",one.ipaddr);
-        m_obj.insert("count",QString::number(one.count));
-
-        ar.append(m_obj);
-
-    }
-
-   // obj.insert("data",ar);
-/*
- QJsonObject m1;
- m1.insert("one", QJsonValue::fromVariant(1));
-  m1.insert("second", QJsonValue::fromVariant(2));
-
-  QJsonObject m2;
-  m2.insert("one", QJsonValue::fromVariant(3));
-   m2.insert("second", QJsonValue::fromVariant(5));
-
-    ar.append(m1);
-      ar.append(m2);
-
-    obj.insert("FirstName", QJsonValue::fromVariant("John"));
-    obj.insert("LastName", QJsonValue::fromVariant("Doe"));
-    obj.insert("Age", QJsonValue::fromVariant(43));
-    obj.insert("Array", ar);
-
-    qDebug()<<"obj: "<<obj;
-
-*/
-
-return ar;
-}
 
 void myserver::startServer()
 {
@@ -136,9 +98,9 @@ void myserver::sockReady()
 
                  qDebug()<<"request_db";
 
-                 QList<db_entity> list=m_db.read();
+                 QJsonArray res=m_db.read();
 
-                 QJsonArray res=convertListdbEntityToJson(list);
+
 
                  QJsonObject jobj;
 

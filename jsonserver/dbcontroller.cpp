@@ -4,6 +4,7 @@
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QJsonObject>
+#include <QJsonArray>
 
 dbController::dbController(QObject *parent) : QObject(parent)
 {
@@ -88,9 +89,9 @@ bool dbController::insert(QString dt, QString ipaddr, uint count)
 
 
 
-QList<db_entity> dbController::read()
+QJsonArray dbController::read()
 {
-    QList<db_entity> list;
+    QJsonArray ar;
     qDebug()<<"dbController::read()";
     QSqlQuery query;
     QString sqlSelect = "SELECT * FROM mydb";
@@ -98,8 +99,9 @@ QList<db_entity> dbController::read()
 
     if(query.lastError().isValid()){
         qDebug()<<"SELECT "<<query.lastError().text();
-        return list;
+        return ar;
     }
+
 
 
     while(query.next()){
@@ -108,19 +110,23 @@ QList<db_entity> dbController::read()
         QString ipaddr    =query.value("ipaddr").toString();
         uint    count     =query.value("count").toUInt();
 
-qDebug()<<id<<" "<<dt<<" "<<ipaddr<<" "<< count;
+        qDebug()<<id<<" "<<dt<<" "<<ipaddr<<" "<< count;
+
+        QJsonObject m_obj;
+        m_obj.insert("dt",dt);
+        m_obj.insert("ipaddr",ipaddr);
+        m_obj.insert("count",QString::number(count));
+
+        ar.append(m_obj);
 
 
 
-      db_entity entity;
-      entity.dt=dt;
-      entity.ipaddr=ipaddr;
-      entity.count=count;
-      list.append(entity);
 
     }
 
-    return list;
+
+
+    return ar;
 
 
 }
@@ -180,27 +186,6 @@ bool dbController::drop_db()
      return true;
 }
 
-db_entity::db_entity(QObject *parent)
-{
 
-}
 
-db_entity::db_entity(const db_entity &parent)
-{
-    dt=parent.dt;
-    ipaddr=parent.ipaddr;
-    count=parent.count;
-}
 
-void db_entity::operator =(const db_entity &entity)
-{
-    this->dt=entity.dt;
-    this->ipaddr=entity.ipaddr;
-    this->count=entity.count;
-
-}
-
-db_entity::~db_entity()
-{
-
-}
